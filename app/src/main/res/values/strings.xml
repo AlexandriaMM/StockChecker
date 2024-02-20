@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="my_text"><u>Stock Monitor 1.0</u></string>
 </resources>
