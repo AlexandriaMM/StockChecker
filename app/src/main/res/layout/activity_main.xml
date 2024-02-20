@@ -52,6 +52,7 @@
         android:layout_width="187dp"
         android:layout_height="58dp"
         android:layout_marginTop="36dp"
+        android:onClick="buttonTapped"
         android:text="Monitor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
