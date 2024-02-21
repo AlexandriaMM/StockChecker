@@ -22,13 +22,16 @@ object ServiceClient {
         queue.add(request)
     }
 
-    public fun get(jsonObject: JSONObject,
+    public fun get(stockSymbol: String,
                     listener: Response.Listener<JSONObject>,
                     errorListener: Response.ErrorListener) {
-        val jsonRequest = JsonObjectRequest(Request.Method.GET,
-            url,
-            jsonObject,
+        val urlStockSymbol= "$url?stockSymbol=$stockSymbol"
+        val jsonRequest = JsonObjectRequest(
+            Request.Method.GET,
+            urlStockSymbol,
+            null,
             listener,
             errorListener)
+        sendRequest(jsonRequest)
     }
 }

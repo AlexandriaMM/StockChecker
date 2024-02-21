@@ -21,24 +21,25 @@ class MainActivity : AppCompatActivity() {
 
     public fun buttonTapped(view: View) {
         val stockSymbol = findViewById<EditText>(R.id.stockInputText)
+        val responseLabel = findViewById<TextView>(R.id.responselbl)
         val stockSymbolText = stockSymbol.text.toString()
         val jsonObject = JSONObject()
         jsonObject.put("stockSymbol", stockSymbolText)
         val timer = Timer()
-        timer.scheduleAtFixedRate(object:TimerTask(){
+        /*timer.scheduleAtFixedRate(object:TimerTask(){
             override fun run() {
-                ServiceClient.get(jsonObject,
-                    Response.Listener {
-                        Log.i("stockPrice", it.getString("stockPrice"))
-                        runOnUiThread{
-                            stockSymbol.setText(it.getString("stockPrice"))
-                        }
-                    },
-                    Response.ErrorListener {
-                        Log.e("stockPrice", it.message.toString())
-                    }
-                )
             }
-        }, 0, 5000)
+        }, 0, 5000)*/
+        ServiceClient.get(stockSymbolText,
+            Response.Listener {
+                Log.i("stockPrice", it.getString("stockPrice"))
+                runOnUiThread{
+                    responseLabel.setText(stockSymbolText + " " + it.getString("stockPrice"))
+                }
+            },
+            Response.ErrorListener {
+                Log.e("stockPrice", it.message.toString())
+            }
+        )
     }
 }
