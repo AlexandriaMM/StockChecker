@@ -26,20 +26,41 @@ class MainActivity : AppCompatActivity() {
         val jsonObject = JSONObject()
         jsonObject.put("stockSymbol", stockSymbolText)
         val timer = Timer()
-        /*timer.scheduleAtFixedRate(object:TimerTask(){
+        timer.scheduleAtFixedRate(object : TimerTask() {
+            var previousStockPrice: Double? = null
             override fun run() {
+                ServiceClient.get(stockSymbolText,
+                    Response.Listener {
+                        Log.i("stockPrice", it.getString("stockPrice"))
+                        runOnUiThread {
+                            val stockPrice = it.getDouble("stockPrice")
+                            updateUI(stockSymbolText, stockPrice, previousStockPrice)
+                            previousStockPrice = stockPrice
+                            /*responseLabel.setText(stockSymbolText + " " + it.getString("stockPrice"))*/
+                        }
+                    },
+                    Response.ErrorListener {
+                        Log.e("stockPrice", it.message.toString())
+                    }
+                )
             }
-        }, 0, 5000)*/
-        ServiceClient.get(stockSymbolText,
-            Response.Listener {
-                Log.i("stockPrice", it.getString("stockPrice"))
-                runOnUiThread{
-                    responseLabel.setText(stockSymbolText + " " + it.getString("stockPrice"))
-                }
-            },
-            Response.ErrorListener {
-                Log.e("stockPrice", it.message.toString())
+        }, 0, 5000)
+    }
+
+    private fun updateUI(stockSymbol: String, stockPrice: Double, maybePreviousStockPrice: Double?) {
+        val previousStockPrice = maybePreviousStockPrice ?: stockPrice;
+
+        val responseLabel = findViewById<TextView>(R.id.responselbl)
+        responseLabel.text = "$stockSymbol $stockPrice"
+
+        if (previousStockPrice != null) {
+            val color = when {
+                stockPrice > previousStockPrice -> R.color.green
+                stockPrice < previousStockPrice -> R.color.red
+                else -> R.color.black
             }
-        )
+            responseLabel.setTextColor(resources.getColor(color, null))
+        }
     }
 }
+
